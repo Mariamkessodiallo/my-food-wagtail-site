@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<article class="post-card {% if featured %}featured{% endif %}">
+    <a href="{% pageurl post %}">
+        {% image post.image fill-600x400 as post_img %}
+        <img src="{{ post_img.url }}" alt="{{ post_img.alt }}">
+        <div class="content">
+            <h3>{{ post.title }}</h3>
+            <p class="meta">
+                {{ post.date|date:"M j, Y" }}
+                {% if post.categories.all %}
+                    | {{ post.categories.all|join:", " }}
+                {% endif %}
+            </p>
+            <p>{{ post.intro }}</p>
+        </div>
+    </a>
+</article>

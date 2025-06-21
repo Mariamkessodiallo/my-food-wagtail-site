@@ -1,0 +1,77 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main">
+
+  <!-- About Us Section -->
+  <section id="about-us" class="about-section section light-background py-5">
+    <div class="container" data-aos="fade-up">
+
+      <!-- Row Content -->
+      <div class="row align-items-center">
+
+        <!-- Left Column: Text and Points -->
+        <div class="col-lg-6 content mb-4 mb-lg-0">
+          <h3 class="mb-3">Qui nous sommes</h3>
+          <p class="mb-4">
+            Foods Access apporte des solutions innovantes pour l’agriculture et l’élevage durables.
+            Nous visons à autonomiser les communautés en assurant l’accès à des produits alimentaires
+            de qualité et abordables.
+          </p>
+          <ul class="list-unstyled about-points">
+            <li><i class="bi bi-check-circle-fill text-primary mr-2"></i>Pratiques agricoles durables.</li>
+            <li><i class="bi bi-check-circle-fill text-primary mr-2"></i>Une qualité de confiance.</li>
+            <li><i class="bi bi-check-circle-fill text-primary mr-2"></i>Initiatives communautaires.</li>
+          </ul>
+        </div>
+
+        <!-- Right Column: Image -->
+        <div class="col-lg-6 text-center">
+          <img src="{% static 'img/1.png' %}"
+               class="img-fluid rounded shadow-sm"
+               alt="Our Team"
+               style="max-width: 100%; height: auto;">
+        </div>
+
+      </div>
+
+      <!-- Extra Visual Elements -->
+      <div class="row mt-5">
+
+        <!-- Milestone Cards -->
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="100">
+          <div class="milestone-box text-center p-4 shadow-sm rounded bg-white">
+            <i class="bi bi-people-fill icon-large text-primary mb-2"></i>
+            <h4 class="mb-2">Des clients heureux</h4>
+            <p class="text-muted">Nous servons des milliers de clients avec satisfaction.</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="200">
+          <div class="milestone-box text-center p-4 shadow-sm rounded bg-white">
+            <i class="bi bi-award-fill icon-large text-primary mb-2"></i>
+            <h4 class="mb-2">Une excellente équipe</h4>
+            <p class="text-muted">Reconnu pour l’excellence de ses pratiques durables.</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="300">
+          <div class="milestone-box text-center p-4 shadow-sm rounded bg-white">
+            <i class="bi bi-tree-fill icon-large text-primary mb-2"></i>
+            <h4 class="mb-2">Procédés écologiques</h4>
+            <p class="text-muted">Engagés pour préserver notre planète grâce à l’innovation.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  
+
+
+</main>
+{% endblock content %}

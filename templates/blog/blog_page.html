@@ -1,0 +1,198 @@
+{% extends 'partials/base.html' %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+  <style>
+
+        /* Featured Image Styles */
+    .featured-image-container {
+      width: 100%;
+      overflow: hidden;
+      margin: 0 0 20px 0;
+    }
+
+    .featured-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Responsive height control */
+    @media (min-width: 992px) {
+      .featured-image-container {
+        height: 600px;
+      }
+      .featured-image {
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    @media (max-width: 991px) {
+      .featured-image-container {
+        height: 350px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .featured-image-container {
+        height: 250px;
+      }
+    }
+
+    /* Content Images - Responsive with max-width constraint */
+    .blog-post-area .content img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 1.5rem 0;
+      border-radius: 4px;
+      max-width: 100%; /* Prevent overflow */
+    }
+
+    /* Optional: Add subtle hover effect */
+    .blog-post-area .content img:hover {
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+    }
+
+ 
+  </style>
+
+
+
+
+  <!--================ Start Blog Post Area =================-->
+  <section class="blog-post-area section-margin">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+            <div class="main_blog_details">
+              {# Featured Image #}
+              {% if page.image %}
+                {% image page.image max-1200x600 as featured_img %}
+                <div class="featured-image-container">
+                  <img class="featured-image" src="{{ featured_img.url }}" alt="{{ page.title }}">
+                </div>
+              {% else %}
+                <div class="featured-image-container">
+                  <img class="featured-image" src="{% static 'img/blog/blog4.png' %}" alt="{{ page.title }}">
+                </div>
+              {% endif %}
+                
+
+                {# Title #}
+                <a href="#"><h4>{{ page.title|linebreaksbr }}</h4></a>
+
+                {# Categories (tags) and Author/Date #}
+                <div class="user_details">
+                  <div class="float-left">
+                    {% for category in page.categories.all %}
+                      <a href="{% pageurl page.get_parent %}?category={{ category.slug }}">{{ category.name }}</a>
+                    {% empty %}
+                      <a href="#">Uncategorized</a>
+                    {% endfor %}
+                  </div>
+                  <div class="float-right mt-sm-0 mt-3">
+                    <div class="media">
+                      <div class="media-body">
+                        
+                        <p>{{ page.date|date:"d M, Y" }}</p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+
+                <div class="content">
+                  {{ page.body|richtext }}
+                </div><!-- End post content -->
+
+              </div>
+
+
+          {# Navigation Area (Prev / Next) #}
+          <div class="navigation-area">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-12 nav-left flex-row d-flex justify-content-start align-items-center">
+                {% with prev=page.get_prev_sibling %}
+                  {% if prev and prev.live %}
+                    
+                    <div class="arrow">
+                      <a href="{{ prev.url }}"><span class="lnr text-white lnr-arrow-left"></span></a>
+                    </div>
+                    <div class="detials">
+                      <p>Post Precedent</p>
+                      <a href="{{ prev.url }}"><h4>{{ prev.title }}</h4></a>
+                    </div>
+                  {% endif %}
+                {% endwith %}
+              </div>
+              <div class="col-lg-6 col-md-6 col-12 nav-right flex-row d-flex justify-content-end align-items-center">
+                {% with nxt=page.get_next_sibling %}
+                  {% if nxt and nxt.live %}
+                    <div class="detials">
+                      <p>Post Suivant</p>
+                      <a href="{{ nxt.url }}"><h4>{{ nxt.title }}</h4></a>
+                    </div>
+                    <div class="arrow">
+                      <a href="{{ nxt.url }}"><span class="lnr text-white lnr-arrow-right"></span></a>
+                    </div>
+                   
+                  {% endif %}
+                {% endwith %}
+              </div>                 
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Start Blog Post Siddebar -->
+        <div class="col-lg-4 sidebar-widgets">
+            <div class="widget-wrap">
+              <div class="single-sidebar-widget newsletter-widget">
+                <h4 class="single-sidebar-widget__title">Newsletter</h4>
+                <form method="post" action="{% url 'subscribe_newsletter' %}">
+                  {% csrf_token %}
+                  <div class="form-group mt-30">
+                    <div class="col-autos">
+                      <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+                    </div>
+                  </div>
+                  <button type="submit" class="bbtns d-block mt-20 w-100">Suscrire</button>
+                </form>
+
+                {% if messages %}
+                  <ul class="messages mt-10">
+                    {% for message in messages %}
+                      <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+
+
+              <div class="single-sidebar-widget post-category-widget">
+                <h4 class="single-sidebar-widget__title">Categorie du post</h4>
+                <ul class="cat-list mt-20">
+                  {% for category in page.categories.all %}
+                    <li>
+                      <a href="{% pageurl page.get_parent %}?category={{ category.slug }}" class="d-flex justify-content-between">
+                        <p>{{ category.name }}</p>
+                        <p>({{ category.blogpage_set.live.count }})</p>
+                      </a>
+                    </li>
+                  {% empty %}
+                    <li>No categories</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+
+              
+      </div>
+  </section>
+  <!--================ End Blog Post Area =================-->
+
+{% endblock %}

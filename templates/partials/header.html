@@ -1,0 +1,67 @@
+{% load static wagtailcore_tags %}
+
+<header class="header_area">
+  <div class="main_menu">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container box_1620">
+        <!-- Brand -->
+        <a class="navbar-brand logo_h" href="{% url 'home' %}">
+          <img src="{% static 'img/logo_food.png' %}" alt="" style="max-height: 80px; width:auto;">
+        </a>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+          <ul class="nav navbar-nav menu_nav justify-content-center">
+            <li class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'home' %}">Accueil</a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'about' %}">À propos</a>
+            </li>
+            <li class="nav-item {% if request.path == blog_home.url %}active{% endif %}">
+              <a class="nav-link" href="{% pageurl blog_home %}">Blog</a>
+            </li>
+            <li class="nav-item submenu dropdown">
+              <a href="#"
+                 class="nav-link dropdown-toggle"
+                 data-toggle="dropdown"
+                 role="button"
+                 aria-haspopup="true"
+                 aria-expanded="false">
+                Catégories
+              </a>
+              <ul class="dropdown-menu">
+                {% for cat in categories %}
+                  <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% pageurl blog_home %}?category={{ cat.slug }}">
+                      {{ cat.name }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right navbar-social">
+            <li><a href="#"><i class="ti-facebook"></i></a></li>
+            <li><a href="#"><i class="ti-twitter-alt"></i></a></li>
+            <li><a href="#"><i class="ti-instagram"></i></a></li>
+            <li><a href="#"><i class="ti-skype"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,286 @@
+{% extends "partials/base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+  
+
+  <main class="site-main">
+
+   {% if promotions %}
+  {% for promo in promotions %}
+    <section class="mb-30px">
+      <div class="container">
+        {# Use the exact “hero-banner” markup, but point its background to the promo image #}
+        {% if promo.image %}
+          {% image promo.image fill-1200x600 as promo_img %}
+          <div class="hero-banner promos-hero" style="
+              background: url('{{ promo_img.url }}') center center no-repeat;
+              background-size: cover;
+            ">
+        {% else %}
+          <div class="hero-banner" style="
+              background: #222; /* fallback color if no image */
+            ">
+        {% endif %}
+            <div class="hero-banner__content">
+              {# You can adjust which fields appear here; at minimum show the promo title #}
+              <h3>{{ promo.subtitle|default:"" }}</h3>
+              <h1>{{ promo.title }}</h1>
+              {% if promo.link_url %}
+                <h4>
+                  <a href="{{ promo.link_url }}" class="btn btn-primary">
+                    {{ promo.link_text|default:"En savoir plus" }}
+                  </a>
+                </h4>
+              {% endif %}
+            </div>
+          </div> {# /.hero-banner #}
+      </div> {# /.container #}
+    </section>
+  {% endfor %}
+{% endif %} 
+
+  <!--================Hero Banner start =================-->  
+  <section class="mb-30px">
+    <div class="container">
+      <div class="hero-banner">
+        <div class="hero-banner__content">
+          <h3>Bienvenue Chez </h3>
+          <h1>Food Access</h1>
+          <h4>Pour une alimentation saine et complete</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--================Hero Banner end =================-->  
+
+  <!--================ Blog slider start =================-->  
+  <section>
+    <div class="container">
+      <div class="owl-carousel owl-theme blog-slider">
+
+        {# ─── LOOP OVER THE SIX SLIDER POSTS ─── #}
+        {% for post in slider_posts %}
+          <div class="card blog__slide text-center">
+            <div class="blog__slide__img">
+              {% if post.image %}
+                {% image post.image fill-600x400 as slide_img %}
+                <img class="card-img rounded-0" src="{{ slide_img.url }}" alt="{{ post.title }}">
+              {% else %}
+                {# fallback if no image #}
+                <img class="card-img rounded-0" src="{% static 'img/blog/blog-slider/blog-slide1.png' %}" alt="No Image Available">
+              {% endif %}
+            </div>
+            <div class="blog__slide__content">
+              {% with first_cat=post.categories.first %}
+                <a class="blog__slide__label" href="#">
+                  {{ first_cat.name|default:"Uncategorized" }}
+                </a>
+              {% endwith %}
+              <h3><a href="{% pageurl post %}">{{ post.title }}</a></h3>
+              <p>{{ post.date|date:"F j, Y" }}</p>
+            </div>
+          </div>
+        {% empty %}
+          {# If there are no featured posts #}
+          <div class="card blog__slide text-center">
+            <div class="blog__slide__img">
+              <img class="card-img rounded-0" src="{% static 'img/blog/blog-slider/blog-slide1.png' %}" alt="No Image Available">
+            </div>
+            <div class="blog__slide__content">
+              <a class="blog__slide__label" href="#">Uncategorized</a>
+              <h3><a href="#">No Featured Post</a></h3>
+              <p>—</p>
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </section>
+  <!--================ Blog slider end =================-->  
+
+  <!--================ Start Blog Post Area =================-->
+  <section class="blog-post-area section-margin mt-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+
+          {# ─── LOOP OVER PAGINATED FEATURED POSTS HERE ─── #}
+        {% for post in paginated_featured %}
+          <div class="single-recent-blog-post">
+            <div class="thumb fixed-thumb">
+              {% if post.image %}
+                {% image post.image fill-800x400 as post_thumb %}
+                <img
+                  class="img-fluid post-thumb-img"
+                  src="{{ post_thumb.url }}"
+                  alt="{{ post.title }}">
+              {% else %}
+                <img
+                  class="img-fluid post-thumb-img"
+                  src="{% static 'img/blog/blog1.png' %}"
+                  alt="No Image Available">
+              {% endif %}
+
+              <ul class="thumb-info">
+                <li>
+                  <a href="#"><i class="ti-notepad"></i>
+                    {{ post.date|date:"F j, Y" }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="details mt-20">
+              <a href="{% pageurl post %}">
+                <h3>{{ post.title }}</h3>
+              </a>
+              <p class="tag-list-inline">
+                Categorie:
+                {% for cat in post.categories.all %}
+                  <a href="#">{{ cat.name }}</a>{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                  Uncategorized
+                {% endfor %}
+              </p>
+              <p>{{ post.intro }}</p>
+              <a class="button" href="{% pageurl post %}">
+                Lire plus <i class="ti-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        {% empty %}
+          <p>No featured posts found.</p>
+        {% endfor %}
+
+        {# ─── PAGINATION CONTROLS FOR “paginated_featured” ─── #}
+        {% if paginated_featured.has_other_pages %}
+          <section class="blog-pagination section">
+            <div class="container">
+              <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                  {# Previous page link #}
+                  {% if paginated_featured.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link"
+                         href="?page={{ paginated_featured.previous_page_number }}">
+                        <i class="ti-angle-left"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+
+                  {# Numbered page links 1 … N #}
+                  {% for num in paginated_featured.paginator.page_range %}
+                    {% if num == paginated_featured.number %}
+                      <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                      </li>
+                    {% else %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {# Next page link #}
+                  {% if paginated_featured.has_next %}
+                    <li class="page-item">
+                      <a class="page-link"
+                         href="?page={{ paginated_featured.next_page_number }}">
+                        <i class="ti-angle-right"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </section>
+        {% endif %}
+        
+        
+
+        </div>
+
+        <!-- Start Blog Post Sidebar -->
+        <div class="col-lg-4 sidebar-widgets">
+          <div class="widget-wrap">
+
+            <div class="single-sidebar-widget newsletter-widget">
+                <h4 class="single-sidebar-widget__title">Newsletter</h4>
+                <form method="post" action="{% url 'subscribe_newsletter' %}">
+                  {% csrf_token %}
+                  <div class="form-group mt-30">
+                    <div class="col-autos">
+                      <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+                    </div>
+                  </div>
+                  <button type="submit" class="bbtns d-block mt-20 w-100">Suscrire</button>
+                </form>
+
+                {% if messages %}
+                  <ul class="messages mt-10">
+                    {% for message in messages %}
+                      <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+
+            <div class="single-sidebar-widget post-category-widget">
+              <h4 class="single-sidebar-widget__title">Categorie</h4>
+              <ul class="cat-list mt-20">
+                {% for cat in sidebar_categories %}
+                  <li>
+                    <a href="?category={{ cat.slug }}" class="d-flex justify-content-between">
+                      <p>{{ cat.name }}</p>
+                      <p>({{ cat.blogpage_set.live.count }})</p>
+                    </a>
+                  </li>
+                {% empty %}
+                  <li><a href="#" class="d-flex justify-content-between"><p>No Categories</p><p>(0)</p></a></li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <div class="single-sidebar-widget popular-post-widget">
+              <h4 class="single-sidebar-widget__title"> Posts populaires</h4>
+              <div class="popular-post-list">
+                {% for post in sidebar_popular_posts %}
+                  <div class="single-post-list">
+                    <div class="thumb">
+                      {% if post.image %}
+                        {% image post.image fill-100x100 as small_thumb %}
+                        <img class="card-img rounded-0" src="{{ small_thumb.url }}" alt="{{ post.title }}">
+                      {% else %}
+                        <img class="card-img rounded-0" src="{% static 'img/blog/thumb/thumb1.png' %}" alt="No Image Available">
+                      {% endif %}
+                      <ul class="thumb-info">
+                        
+                        <li><a href="#">{{ post.date|date:"M d" }}</a></li>
+                      </ul>
+                    </div>
+                    <div class="details mt-20">
+                      <a href="{% pageurl post %}"><h6>{{ post.title }}</h6></a>
+                    </div>
+                  </div>
+                {% endfor %}
+                {% if sidebar_popular_posts|length == 0 %}
+                  <p>No popular posts</p>
+                {% endif %}
+              </div>
+            </div>
+
+            
+
+          </div>
+        </div>
+        <!-- End Blog Post Sidebar -->
+
+      </div>
+    </div>
+  </section>
+  <!--================ End Blog Post Area =================-->
+</main>
+
+{% endblock %}

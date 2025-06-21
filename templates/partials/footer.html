@@ -1,0 +1,113 @@
+{% load static %}
+<footer class="footer-area section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3  col-md-6 col-sm-6">
+          <div class="single-footer-widget">
+            <h6>A propos de nous</h6>
+            <p>
+              Foods Access opère à partir de Nongo, dans la commune de Ratoma à Conakry, et se concentre sur l'agriculture et l'élevage intégrés. 
+              Elle gère une ferme avicole située à Kiriya, dans la commune rurale de Wonkifong, dans la préfecture de Coyah, qui abrite actuellement 20 000 poules pondeuses.
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-4  col-md-6 col-sm-6">
+          <div class="single-footer-widget">
+            <h6>Newsletter</h6>
+            <p>Restez informé avec les dernières informations</p>
+
+            <div id="mc_embed_signup">
+              <form method="post" action="{% url 'subscribe_newsletter' %}">
+                {% csrf_token %}
+                <div class="row align-items-center">
+                  <div class="col-12 col-md-8 mb-2 mb-md-0">
+                    <input
+                      type="email"
+                      name="email"
+                      class="form-control"
+                      placeholder="Entrer Email"
+                      required
+                    />
+                  </div>
+                  <div class="col-12 col-md-4 text-md-left">
+                    <button type="submit" class="btn btn-default w-100 w-md-auto">
+                       <span class="lnr lnr-arrow-right ml-1">S'inscrire</span>
+                    </button>
+                  </div>
+                </div>
+
+                {% if messages %}
+                  <ul class="messages mt-2">
+                    {% for message in messages %}
+                      <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </form>
+            </div>
+          </div>
+            
+
+        </div>
+        
+       
+        <div class="col-lg-2 col-md-6 col-sm-6">
+          <div class="single-footer-widget">
+            <h6>Suivez nous</h6>
+            <p>Socialisez avec nous </p>
+            <div class="footer-social d-flex align-items-center">
+              <a href="#">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#">
+                <i class="fab fa-dribbble"></i>
+              </a>
+              <a href="#">
+                <i class="fab fa-behance"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6 col-sm-6">
+          <div class="single-footer-widget" data-aos="fade-up" data-aos-delay="200">
+            <h3>Contact Info</h3>
+            <p>Vous pouvez nous contacter.</p>
+            
+            <div class="info-item" data-aos="fade-up" data-aos-delay="300">
+              <div class="icon-box">
+                <i class="bi bi-geo-alt"></i>
+              </div>
+              <div class="content">
+                <h4>Localisation</h4>
+                <p>Siège Social </p>
+                <p>Nongo, commune de Ratoma</p>
+                <p>Conakry, Republique de Guinée</p>
+              </div>
+            </div>
+            <div class="info-item" data-aos="fade-up" data-aos-delay="400">
+              <div class="icon-box">
+                <i class="bi bi-telephone"></i>
+              </div>
+              <div class="content">
+                <h4>Telephone</h4>
+                <p>+224 629 59 35 35</p>
+              </div>
+            </div>
+            <div class="info-item" data-aos="fade-up" data-aos-delay="500">
+              <div class="icon-box">
+                <i class="bi bi-envelope"></i>
+              </div>
+              <div class="content">
+                <h4>Email</h4>
+                <p>infofoodaccess2@gmail.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+       </div>
+    </div>
+  </footer>

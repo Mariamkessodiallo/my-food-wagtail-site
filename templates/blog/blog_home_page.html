@@ -1,0 +1,186 @@
+{% extends 'partials/base.html' %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+  <!--================ Hero sm Banner start =================-->    
+ 
+
+  <section class="blog-post-area section-margin">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+
+          <div class="row">
+            {# Loop over the paginated `posts` Page object #}
+            {% for post in posts %}
+              <div class="col-md-6">
+                <div class="single-recent-blog-post card-view">
+                  <div class="thumb">
+                    {% if post.specific.image %}
+                      {# “fill-600x400” is just an example – pick whatever resize you want #}
+                      {% image post.specific.image fill-600x400 as img_obj %}
+                      <img
+                        class="card-img rounded-0"
+                        src="{{ img_obj.url }}"
+                        alt="{{ post.title }}"
+                      >
+                    {% else %}
+                      <img
+                        class="card-img rounded-0"
+                        src="{% static 'img/blog/thumb/thumb-placeholder.png' %}"
+                        alt="No Image Available"
+                      >
+                    {% endif %}
+                    <ul class="thumb-info">
+                      
+                      <li>
+                        <a href="#"><i class="ti-notepad"></i>
+                          {{ post.specific.date|date:"F j, Y" }}
+                        </a>
+                      </li>
+                      
+                    </ul>
+                  </div>
+                  <div class="details mt-20">
+                    <a href="{% pageurl post.specific %}">
+                      <h3>{{ post.specific.title }}</h3>
+                    </a>
+                    <p>{{ post.specific.intro }}</p>
+                    <a class="button" href="{% pageurl post.specific %}">
+                      Lire plus <i class="ti-arrow-right"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          {# ======================== Pagination Controls ======================== #}
+          {% if posts.paginator.num_pages > 1 %}
+            <nav class="blog-pagination justify-content-center d-flex">
+              <ul class="pagination">
+
+                {% if posts.has_previous %}
+                  <li class="page-item">
+                    <a href="?page={{ posts.previous_page_number }}" class="page-link">
+                      <i class="ti-angle-left"></i>
+                    </a>
+                  </li>
+                {% endif %}
+
+                {# Show page numbers 1…N; highlight the current page #}
+                {% for num in posts.paginator.page_range %}
+                  <li class="page-item {% if posts.number == num %}active{% endif %}">
+                    <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                  </li>
+                {% endfor %}
+
+                {% if posts.has_next %}
+                  <li class="page-item">
+                    <a href="?page={{ posts.next_page_number }}" class="page-link">
+                      <i class="ti-angle-right"></i>
+                    </a>
+                  </li>
+                {% endif %}
+
+              </ul>
+            </nav>
+          {% endif %}
+          {# =============== end pagination =============== #}
+
+        </div>
+
+        {# ===== Sidebar ===== #}
+        <div class="col-lg-4 sidebar-widgets">
+          <div class="widget-wrap">
+
+            {# Newsletter Widget (static) … #}
+            <div class="single-sidebar-widget newsletter-widget">
+                <h4 class="single-sidebar-widget__title">Newsletter</h4>
+                <form method="post" action="{% url 'subscribe_newsletter' %}">
+                  {% csrf_token %}
+                  <div class="form-group mt-30">
+                    <div class="col-autos">
+                      <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+                    </div>
+                  </div>
+                  <button type="submit" class="bbtns d-block mt-20 w-100">Suscrire</button>
+                </form>
+
+                {% if messages %}
+                  <ul class="messages mt-10">
+                    {% for message in messages %}
+                      <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+
+            {# Category List (dynamically get all Categories) … #}
+            <div class="single-sidebar-widget post-category-widget">
+              <h4 class="single-sidebar-widget__title">Categorie</h4>
+              <ul class="cat-list mt-20">
+                {% for category in sidebar_categories %}
+                  <li>
+                    <a
+                      href="?category={{ category.slug }}"
+                      class="d-flex justify-content-between"
+                    >
+                      <p>{{ category.name }}</p>
+                      <p>({{ category.blogpage_set.live.count }})</p>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            {# Recent (Popular) Posts #}
+            <div class="single-sidebar-widget popular-post-widget">
+              <h4 class="single-sidebar-widget__title"> Posts populaires</h4>
+              <div class="popular-post-list">
+                {% for recent in sidebar_popular_posts %}
+                  <div class="single-post-list">
+                    <div class="thumb">
+                      {% if recent.image %}
+                        {% image recent.image fill-100x100 as thumb %}
+                        <img
+                          class="card-img rounded-0"
+                          src="{{ thumb.url }}"
+                          alt="{{ recent.title }}"
+                        >
+                      {% else %}
+                        <img
+                          class="card-img rounded-0"
+                          src="{% static 'img/blog/thumb/thumb-placeholder.png' %}"
+                          alt="No Image Available"
+                        >
+                      {% endif %}
+                      <ul class="thumb-info">
+                        <li><a href="#">{{ recent.owner.get_full_name|default:"Admin" }}</a></li>
+                        <li><a href="#">{{ recent.date|date:"M d" }}</a></li>
+                      </ul>
+                    </div>
+                    <div class="details mt-20">
+                      <a href="{% pageurl recent %}"><h6>{{ recent.title }}</h6></a>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            
+          </div>
+        </div>
+        {# ===== End Sidebar ===== #}
+
+      </div>
+    </div>
+  </section>
+
+
+  
+  <!--================ End Blog Post Area =================-->
+
+
+{% endblock %}
