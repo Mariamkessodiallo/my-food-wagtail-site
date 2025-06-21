@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'wagtail_newsletter',
     
 
-    
+    'wagtail_patch',
     'blog',
     'core',
 
